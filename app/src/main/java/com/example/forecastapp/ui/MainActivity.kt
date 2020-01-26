@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // upNavigation controls the arrow that appears on top of the view and lets us to
-    // return to current weather
+    // return to currentWeatherEntry weather
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController,null)
     }
