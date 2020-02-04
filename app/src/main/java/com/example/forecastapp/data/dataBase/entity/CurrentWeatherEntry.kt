@@ -1,16 +1,24 @@
-package com.example.forecastapp.data.reponse
+package com.example.forecastapp.data.dataBase.entity
 
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.example.forecastapp.util.Constants
 import com.google.gson.annotations.SerializedName
 
+
+@Entity(tableName = "current_weather")
 data class CurrentWeatherEntry(
     @SerializedName("observation_time")
     val observationTime: String,
     val temperature: Int,
     @SerializedName("weather_code")
     val weatherCode: Int,
+    @Embedded(prefix = "weatherIcons_")
     @SerializedName("weather_icons")
     val weatherIcons: List<String>,
+    @Embedded(prefix = "weather_descriptions_")
     @SerializedName("weather_descriptions")
     val weatherDescriptions: List<String>,
     @SerializedName("wind_speed")
@@ -19,7 +27,6 @@ data class CurrentWeatherEntry(
     val windDegree: Int,
     @SerializedName("wind_dir")
     val windDir: String,
-    val pressure: Int,
     val precip: Double,
     val humidity: Int,
     val cloudcover: Int,
@@ -29,4 +36,7 @@ data class CurrentWeatherEntry(
     val visibility: Int,
     @SerializedName("is_day")
     val isDay: String
-)
+){
+    @PrimaryKey(autoGenerate = false)
+    var id : Int = Constants.CURRENT_WEATHER_ID
+}
