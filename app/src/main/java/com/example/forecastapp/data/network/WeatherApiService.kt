@@ -1,4 +1,4 @@
-package com.example.forecastapp.data
+package com.example.forecastapp.data.network
 
 import com.example.forecastapp.data.reponse.CurrentWeatherResponse
 import com.example.forecastapp.util.Constants
@@ -31,7 +31,7 @@ interface WeatherApiService {
 
 
     companion object {
-        operator fun invoke() : WeatherApiService{
+        operator fun invoke() : WeatherApiService {
             val requestInterceptor = Interceptor {
 
                 val url = it.request()
