@@ -8,7 +8,8 @@ import android.net.NetworkCapabilities
 import android.net.Network
 import android.content.Context.CONNECTIVITY_SERVICE
 import androidx.core.content.ContextCompat.getSystemService
-
+import com.example.forecastapp.internal.NoConnectivityException
+import java.io.IOException
 
 
 class ConnectivityInterceptorImpl (context: Context): ConnectivityInterceptor {
@@ -17,7 +18,10 @@ class ConnectivityInterceptorImpl (context: Context): ConnectivityInterceptor {
     //the one from activity or fragment
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (!isOnline()){
+            throw NoConnectivityException()
+        }
+        return chain.proceed(chain.request())
     }
 
     private fun isOnline() : Boolean{

@@ -31,7 +31,9 @@ interface WeatherApiService {
 
 
     companion object {
-        operator fun invoke() : WeatherApiService {
+        operator fun invoke(
+            connectivityInterceptor: ConnectivityInterceptor // because of the injection
+        ) : WeatherApiService {
             val requestInterceptor = Interceptor {
 
                 val url = it.request()
@@ -50,6 +52,7 @@ interface WeatherApiService {
 
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(requestInterceptor)
+                .addInterceptor(connectivityInterceptor) // because of the dependency injection
                 .build()
 
             return Retrofit.Builder()
