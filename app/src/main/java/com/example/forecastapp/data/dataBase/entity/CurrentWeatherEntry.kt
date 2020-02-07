@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.forecastapp.util.Constants
+import com.example.forecastapp.util.Constants.Companion.CURRENT_WEATHER_ID
 import com.google.gson.annotations.SerializedName
 
 
@@ -15,10 +16,10 @@ data class CurrentWeatherEntry(
     val temperature: Int,
     @SerializedName("weather_code")
     val weatherCode: Int,
-    @Embedded(prefix = "weatherIcons_")
+    //@Embedded(prefix = "weatherIcons_")
     @SerializedName("weather_icons")
     val weatherIcons: List<String>,
-    @Embedded(prefix = "weather_descriptions_")
+    //@Embedded(prefix = "weather_descriptions_")
     @SerializedName("weather_descriptions")
     val weatherDescriptions: List<String>,
     @SerializedName("wind_speed")
@@ -38,5 +39,5 @@ data class CurrentWeatherEntry(
     val isDay: String
 ){
     @PrimaryKey(autoGenerate = false)
-    var id : Int = Constants.CURRENT_WEATHER_ID
+    var id: Int = CURRENT_WEATHER_ID
 }
