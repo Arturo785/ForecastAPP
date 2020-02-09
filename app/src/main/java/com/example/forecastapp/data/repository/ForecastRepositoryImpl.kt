@@ -52,6 +52,7 @@ class ForecastRepositoryImpl (
         weatherNetworkDataSource.fetchCurrentWeather(
             "Los Angeles"
         )
+        // the init block observes forever the result
     }
 
 }
