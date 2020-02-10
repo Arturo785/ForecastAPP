@@ -1,18 +1,15 @@
 package com.example.forecastapp.weather.current
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.forecastapp.R
 import com.example.forecastapp.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.current_weather_fragment.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
@@ -22,7 +19,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
     override val kodein by closestKodein()
 
-
+        //like that because of the dependency injection
     private val viewModelFactory : CurrentWeatherViewModelFactory by instance()
 
 
@@ -36,10 +33,11 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        // second parameter is the factory
         viewModelWeather = ViewModelProviders.of(this, viewModelFactory)
             .get(CurrentWeatherViewModel::class.java)
 
-        bindUI2()
+        bindUI()
     }
 
     private fun bindUI() = launch{
@@ -56,6 +54,22 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             val test = async {
                 viewModelWeather.weather
             }.await()
+
+            test.await().observe(this@CurrentWeatherFragment, Observer {
+                if(it == null) return@Observer
+
+                textViewCurrentWeather.text = it.toString()
+            })
+
+        }
+    }
+        // bindUI 2 and 3 do the same but with different methods
+    private fun bindUI3(){
+        CoroutineScope(Dispatchers.Main).launch {
+
+            val test = withContext(Dispatchers.Main) {
+                viewModelWeather.weather
+            }
 
             test.await().observe(this@CurrentWeatherFragment, Observer {
                 if(it == null) return@Observer
