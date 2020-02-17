@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.forecastapp.R
+import com.example.forecastapp.internal.glide.GlideApp
 import com.example.forecastapp.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.current_weather_fragment.*
 import kotlinx.coroutines.*
@@ -45,7 +47,21 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         currentWeather.observe(this@CurrentWeatherFragment, Observer {
             if(it == null) return@Observer
 
-            textViewCurrentWeather.text = it.toString()
+            group_loading.visibility = View.GONE
+            updateLocation("Los Angeles")
+            updateDateToToday()
+            updateTemperaure(it.temperature,it.feelslike)
+            updateCondition(it.weatherDescriptions[0])
+            updatePrecipitation(it.precip)
+            updateWind(it.windDir,it.windSpeed)
+            updateVisibility(it.visibility)
+
+            //This simple with the addition of appGlideModule in Internal package
+            GlideApp.with(this@CurrentWeatherFragment)
+                .load(it.weatherIcons[0])
+                .into(imageView_condition_icon)
+
+
         })
     }
 
@@ -58,7 +74,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             test.await().observe(this@CurrentWeatherFragment, Observer {
                 if(it == null) return@Observer
 
-                textViewCurrentWeather.text = it.toString()
+                //textViewCurrentWeather.text = it.toString()
             })
 
         }
@@ -74,10 +90,48 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             test.await().observe(this@CurrentWeatherFragment, Observer {
                 if(it == null) return@Observer
 
-                textViewCurrentWeather.text = it.toString()
+                //textViewCurrentWeather.text = it.toString()
             })
 
         }
+    }
+
+    private fun chooseLocalizedUnitAbbreviaton(metric : String, imperial : String) : String{
+        return if(viewModelWeather.isMetric) metric else imperial
+    }
+
+    private fun updateLocation(location : String){
+        (activity as? AppCompatActivity)?.supportActionBar?.title = location
+    }
+
+    private fun updateDateToToday(){
+        (activity as? AppCompatActivity)?.supportActionBar?.subtitle = "Today"
+    }
+
+    private fun updateTemperaure(temperature : Int, feelsLike: Int){
+        val unit = chooseLocalizedUnitAbbreviaton("ºC" , "ºF")
+        textView_temperature.text = "$temperature$unit"
+        textView_feels_like_temperature.text = "Feels like $feelsLike$unit"
+    }
+
+    private fun updateCondition(condition : String){
+        textView_condition.text = condition
+    }
+
+    private fun updatePrecipitation(precipitationVolume: Double){
+        val unit = chooseLocalizedUnitAbbreviaton("mm" , "in")
+        textView_precipitation.text = "Precipitation $precipitationVolume $unit"
+
+    }
+
+    private fun updateWind(windDirection: String, windSpeed: Int) {
+        val unitAbbreviation = chooseLocalizedUnitAbbreviaton("kph", "mph")
+        textView_wind.text = "Wind: $windDirection, $windSpeed $unitAbbreviation"
+    }
+
+    private fun updateVisibility(visibilityDistance: Int) {
+        val unitAbbreviation = chooseLocalizedUnitAbbreviaton("km", "mi.")
+        textView_visibility.text = "Visibility: $visibilityDistance $unitAbbreviation"
     }
 
 }
