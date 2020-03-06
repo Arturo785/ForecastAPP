@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">ForecastAPP</string>
     <string name="loading">Loading</string>
+    <string name="device_location">Use device Location</string>
+    <string name="summary_location">Allow the app to get your location</string>
 </resources>
