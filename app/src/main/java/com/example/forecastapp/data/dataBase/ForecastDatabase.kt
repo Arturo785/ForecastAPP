@@ -6,11 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.forecastapp.data.dataBase.entity.CurrentWeatherEntry
+import com.example.forecastapp.data.dataBase.entity.Location
 import com.example.forecastapp.util.Converters
+
+// connects with the repository
 
 
 @Database(
-    entities = [CurrentWeatherEntry::class],
+    entities = [CurrentWeatherEntry::class,Location::class],
     version = 1)
     @TypeConverters(Converters::class)
 
@@ -20,6 +23,7 @@ import com.example.forecastapp.util.Converters
 abstract class ForecastDatabase : RoomDatabase(){
 
     abstract fun currentWeatherDao(): CurrentWeatherDAO
+    abstract fun weatherLocationDao(): WeatherLocationDao
 
     companion object{ // to have a singleton of the DB
        @Volatile private var instance : ForecastDatabase? = null
